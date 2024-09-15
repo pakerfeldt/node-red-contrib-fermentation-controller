@@ -14,6 +14,8 @@ We are going to use a Shelly Plus 2PM + Shelly Plus Addon + 2 Shelly Temperature
 The 2PM has two channels, where one is used for cooling and one for heating. Connect each channel to an output socket. Always consult with electrician!
 For gravity readings, we are going to use an iSpindel that communicates over MQTT which Node-RED has built-in support for. 
 
+<img src="images/shelly_hardware.jpg" width=50% height=50%><img src="images/ispindel.jpg" width=50% height=50%>
+
 One sensor probe will be positioned somewhere inside the refrigerator to measure ambient temperature. The other probe should be positioned for reading the temperature in your fermentation
 vessel, through for example a thermowell. If this is not possible, you can use the temperature readings from iSpindel or any other way you see fit.
 
