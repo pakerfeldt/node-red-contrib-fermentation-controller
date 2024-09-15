@@ -56,6 +56,7 @@ Our flow is going to look something like this:
 }
 ```
 ## Activating a fermentation profile
+☝️ The process of activating a profile is rather crude at the moment, and needs to be simplified. I.e. how can we easily pass in a fermentation profile without having to access the Node-RED admin interface?
 The [Fermentation Controller Readme](https://github.com/pakerfeldt/node-red-contrib-fermentation-controller) describes in detail how to define a profile. For the purpose of this guide, I'm going to use an example profile.
 
 Add an inject node and set `msg.profile` to the JSON:
@@ -98,4 +99,4 @@ Add an inject node and set `msg.profile` to the JSON:
 ```
 Hopefully this profile is relatively straight-forward. The expected final gravity is 1.007. There are 4 steps in this profile which starts at 12°C (this can ofc be Fahrenheit as long as your thermostat expects °F) for either 14 days or until the specific gravity reaches below or equal to 1.017 (whatever comes first). Then it increases the temperature to 16°C for one day, followed by another °C increase for 1 day or until FG is reached. Finally it goes down to 0°C for cold crash for 3 days.
 
-☝️ This process of activating a profile needs to be simplified. I.e. how can we easily pass in a fermentation profile without having to access the Node-RED admin interface?
+
