@@ -43,7 +43,7 @@ Our flow is going to look something like this:
 <img src="images/automation-flow.png" />
 * Ambient temperature should subscribe to the MQTT topic for your ambient temperature sensor. In my case, it's `shellyplus2pm-d12bfd79a188/status/temperature:101`.
 * Fermenter temperature should subscribe o the MQTT topic for your fermenter temperature sensor. In my case, it's `shellyplus2pm-d12bfd79a188/status/temperature:100`.
-* `as t2` and `as t1` are both `Change` nodes that changes the topic of the message to `t2` and `t1` respectively to match what receiver expects.
+* `as t2` and `as t1` are both `Change` nodes that changes the topic of the message to `t2` and `t1` respectively and sets `msg.payload` to the value of `msg.payload.tC` as given by the Shelly device.
 * Shelly Plus 2PM node needs to be connected to your 2PM device. Type in the IP address of your 2PM device in the node configuration.
 * `to cooler` and `to heater` are both `Change` nodes that sets the `msg.payload` using the following JSONata expression. `id` is either 0 or 1 depending on which output belongs to the cooler / heater.
 ```json
@@ -55,3 +55,47 @@ Our flow is going to look something like this:
     }
 }
 ```
+## Activating a fermentation profile
+The [Fermentation Controller Readme](https://github.com/pakerfeldt/node-red-contrib-fermentation-controller) describes in detail how to define a profile. For the purpose of this guide, I'm going to use an example profile.
+
+Add an inject node and set `msg.profile` to the JSON:
+```json
+{
+    "expectedFG": 1.007,
+    "steps": [
+        {
+            "targetTemperature": 12,
+            "goal": {
+                "days": 14,
+                "gravity": {
+                    "fromFG": 0.01
+                }
+            }
+        },
+        {
+            "targetTemperature": 16,
+            "goal": {
+                "days": 1
+            }
+        },
+        {
+            "targetTemperature": 17,
+            "goal": {
+                "days": 1,
+                "gravity": {
+                    "absolute": 1.007
+                }
+            }
+        },
+        {
+            "targetTemperature": 0,
+            "goal": {
+                "days": 3
+            }
+        }
+    ]
+}
+```
+Hopefully this profile is relatively straight-forward. The expected final gravity is 1.007. There are 4 steps in this profile which starts at 12°C (this can ofc be Fahrenheit as long as your thermostat expects °F) for either 14 days or until the specific gravity reaches below or equal to 1.017 (whatever comes first). Then it increases the temperature to 16°C for one day, followed by another °C increase for 1 day or until FG is reached. Finally it goes down to 0°C for cold crash for 3 days.
+
+☝️ This process of activating a profile needs to be simplified. I.e. how can we easily pass in a fermentation profile without having to access the Node-RED admin interface?
