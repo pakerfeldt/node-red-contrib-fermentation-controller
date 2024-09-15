@@ -1,5 +1,7 @@
 # Automated fermentation
 
+⚠️ This guide is work-in-progress.
+
 This guide will walk you through how to accomplish a fully automated multi-step fermentation using this Node-RED library along with a few other. 
 It is assumed that you are already familiar with Node-RED, if not I suggest you read up on that before.
 
@@ -14,7 +16,7 @@ We are going to use a Shelly Plus 2PM + Shelly Plus Addon + 2 Shelly Temperature
 The 2PM has two channels, where one is used for cooling and one for heating. Connect each channel to an output socket. Always consult with electrician!
 For gravity readings, we are going to use an iSpindel that communicates over MQTT which Node-RED has built-in support for. 
 
-<img src="images/shelly_hardware.jpg" width=50% height=50%><img src="images/ispindel.jpg" width=50% height=50%>
+<img src="images/shelly_hardware.jpg" width=50% height=50% /><img src="images/ispindel.jpg" width=50% height=50% />
 
 One sensor probe will be positioned somewhere inside the refrigerator to measure ambient temperature. The other probe should be positioned for reading the temperature in your fermentation
 vessel, through for example a thermowell. If this is not possible, you can use the temperature readings from iSpindel or any other way you see fit.
@@ -23,8 +25,33 @@ vessel, through for example a thermowell. If this is not possible, you can use t
 
 ​Add the Shelly devices to your network by using their mobile app, but do not add them as a "Thermostat" since we will be using Temperature Controller in Node-RED as our thermostat.
 Each of the two channels will become its own device in Shelly and you add one temperature sensor to each of these two devices.
+For both of these deices, enable MQTT in the Shelly app and configure it to your MQTT broker. Ensure `Generic status update over MQTT` is enabled. Enabling MQTT is not strictly necessary as there are other methods to get temperature readings.
+
+# Hooking up iSpindel
+It's not strictly necessary to connect an iSpindel. You can still automate a fermentation schedule by using days, but you cannot use gravity goals
+to transition between steps in your fermentation schedule. If you want to acheive that, you need to get iSpindel readings into Node-RED. One way
+of doing this is to connect it to your MQTT broker. Refer to iSpindel documentation on how to do that.
+
+## Brewfather
+Worried about not getting readings to Brewfather when changing to MQTT? Don't worry, you can create a very small flow in Node-RED that takes your readings from MQTT and forwards them to Brewfather as if the iSpindel was directly connected.
 
 # Node-RED
 
 Install the four libraries to your Node-RED instance.
 
+Our flow is going to look something like this:
+<img src="images/automation-flow.png" />
+* Ambient temperature should subscribe to the MQTT topic for your ambient temperature sensor. In my case, it's `shellyplus2pm-d12bfd79a188/status/temperature:101`.
+* Fermenter temperature should subscribet o the MQTT topic for your fermenter temperature sensor. In my case, it's `shellyplus2pm-d12bfd79a188/status/temperature:100`.
+* `as t2` and `as t1` are both `Change` nodes that changes the topic of the message to `t2` and `t1` respectively to match what receiver expects.
+* Shelly Plus 2PM node needs to be connected to your 2PM device. Type in the IP address of your 2PM device in the node configuration.
+* `to cooler` and `to heater` are both `Change` nodes that sets the `msg.payload` using the following JSONata expression. `id` is either 0 or 1 depending on which output belongs to the cooler / heater.
+```json
+{
+    "method" : "Switch.Set",
+    "parameters" : {
+        "id" : 0,
+        "on" : msg.payload
+    }
+}
+```
