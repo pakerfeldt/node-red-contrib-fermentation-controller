@@ -1,6 +1,6 @@
 # Automated fermentation
 
-⚠️ This guide is work-in-progress.
+⚠️ This guide is work-in-progress ⚠️
 
 This guide will walk you through how to accomplish a fully automated multi-step fermentation using this Node-RED library along with a few other. 
 It is assumed that you are already familiar with Node-RED, if not I suggest you read up on that before.
@@ -42,7 +42,7 @@ Install the four libraries to your Node-RED instance.
 Our flow is going to look something like this:
 <img src="images/automation-flow.png" />
 * Ambient temperature should subscribe to the MQTT topic for your ambient temperature sensor. In my case, it's `shellyplus2pm-d12bfd79a188/status/temperature:101`.
-* Fermenter temperature should subscribet o the MQTT topic for your fermenter temperature sensor. In my case, it's `shellyplus2pm-d12bfd79a188/status/temperature:100`.
+* Fermenter temperature should subscribe o the MQTT topic for your fermenter temperature sensor. In my case, it's `shellyplus2pm-d12bfd79a188/status/temperature:100`.
 * `as t2` and `as t1` are both `Change` nodes that changes the topic of the message to `t2` and `t1` respectively to match what receiver expects.
 * Shelly Plus 2PM node needs to be connected to your 2PM device. Type in the IP address of your 2PM device in the node configuration.
 * `to cooler` and `to heater` are both `Change` nodes that sets the `msg.payload` using the following JSONata expression. `id` is either 0 or 1 depending on which output belongs to the cooler / heater.
