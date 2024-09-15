@@ -1,0 +1,120 @@
+{
+    "id": "4f4ef842139cbdf9",
+    "type": "subflow",
+    "name": "fermentation controller",
+    "info": "# Fermentation Controller\n\n## Overview\nThis node manages the fermentation process by controlling temperature, tracking time, and monitoring gravity to progress through various fermentation steps. The node ensures accurate execution of multi-step fermentation profiles based on specific time and gravity goals.\n\n## Inputs\nmsg.payload.profile: An object containing the fermentation profile, which includes multiple steps. Each step has a target temperature and a goal, which can be based on time (days) or gravity (absolute or relative to the Final Gravity, FG).\n\nmsg.payload.gravity: The latest gravity reading of the fermenting liquid (Specific Gravity, SG).\n\nmsg.payload.temperature: The latest temperature reading of the fermenting vessel.\n\n## Outputs\n### Progress Output (msg.payload):\n\nContains the current step number, total steps, target temperature, the goal for the current step (days or gravity), and a fermentation log.\nThe fermentation log contains timestamps of when each step started, when the step temperature was reached, and the reasons for transitioning between steps.\nExample msg.payload structure:\n\n```\n{\n    \"target\": 18.5,\n    \"currentStep\": 2,\n    \"totalSteps\": 4,\n    \"stepGoal\": {\n        \"days\": 7,\n        \"gravity\": {\n            \"absolute\": 1.010\n        }\n    },\n    \"log\": [\n        {\n            \"step\": 1,\n            \"event\": \"First Step Started\",\n            \"timestamp\": \"2024-09-14T10:00:00Z\"\n        },\n        {\n            \"step\": 1,\n            \"event\": \"Step temperature reached\",\n            \"timestamp\": \"2024-09-14T11:00:00Z\"\n        },\n        {\n            \"step\": 2,\n            \"event\": \"Step Transition\",\n            \"reason\": \"Gravity goal met\",\n            \"timestamp\": \"2024-09-16T10:00:00Z\"\n        }\n    ]\n}\n```\n\n### Status Output:\n\nDisplays the current step, total steps, and the step's goal in a human-readable format.\nShows blue ring status when waiting for desired step temperature and blue dot when temperature has been reached, while the process is ongoing.\nThe time for a step does not start counting until step temperature has been reached.\nWhen fermentation is complete, a green dot is displayed.\nExample status text:\n\nStep 2 / 4. Goal: 7 days or 1.010 SG\n\n## Process Flow\n1. Profile Setup: When a new profile is received (msg.payload.profile), the fermentation process resets, and the profile is activated. The first step begins immediately.\n\n2. Step Temperature: Each step has a target temperature that must be reached (default within ±0.5°C but configurable) before the step's time goals are evaluated. If the temperature is not within range, the process will wait until it stabilizes before starting the step's timer.\n\n3. Step Transition:\n    * If a step's time goal is reached, the node transitions to the next step.\n    * If a gravity goal is met (either a specific SG or a relative SG from FG), the node transitions to the next step.\n    * Upon each transition, a log entry is made, including the reason for the transition (time or gravity).\n\n4.Completion: When all steps are complete, the process stops, and the status changes to indicate \"Fermentation Complete\" with a green dot. The last temperature target is retained to prevent sudden changes in temperature control.\n\n## Logging\nThe node keeps a detailed log of the fermentation process, which includes:\n\n* Timestamp when each step starts.\n* Timestamp when the step temperature was reached for each step.\n* Reason for transitioning between steps (e.g., \"Time goal met\" or \"Gravity goal met\"). This log is provided in every progress message to track the progress history.\n\n\n## Example Profile\nHere is an example of a fermentation profile that the node would accept:\n```\n{\n    \"expectedFG\": 1.009,\n    \"steps\": [\n        {\n            \"targetTemperature\": 10,\n            \"goal\": {\n                \"gravity\": {\n                    \"fromFG\": 0.015\n                }\n            }\n        },\n        {\n            \"targetTemperature\": 16,\n            \"goal\": {\n                \"days\": 3,\n                \"gravity\": {\n                    \"absolute\": 1.010\n                }\n            }\n        },\n        {\n            \"targetTemperature\": 0,\n            \"goal\": {\n                \"days\": 3\n            }\n        }\n    ]\n}\n```",
+    "category": "smart home",
+    "in": [
+        {
+            "x": 460,
+            "y": 140,
+            "wires": [
+                {
+                    "id": "0a016af05caed270"
+                }
+            ]
+        }
+    ],
+    "out": [
+        {
+            "x": 840,
+            "y": 120,
+            "wires": [
+                {
+                    "id": "0a016af05caed270",
+                    "port": 0
+                }
+            ]
+        }
+    ],
+    "env": [
+        {
+            "name": "TEMPERATURE_DIFFERENCE",
+            "type": "num",
+            "value": "0.5",
+            "ui": {
+                "icon": "font-awesome/fa-thermometer-0",
+                "label": {
+                    "en-US": "Allowed temperature diff"
+                },
+                "type": "input",
+                "opts": {
+                    "types": [
+                        "num"
+                    ]
+                }
+            }
+        }
+    ],
+    "meta": {
+        "module": "Fermentation Controller",
+        "type": "smart home",
+        "version": "1.0.0",
+        "author": "Patrik Åkerfeldt",
+        "desc": "A fermentation controller to automatically progress through your fermentation schedule",
+        "keywords": "beer, home brewing, fermentation, controller, automation, node-red",
+        "license": "MIT"
+    },
+    "color": "#F3B567",
+    "icon": "font-awesome/fa-beer",
+    "status": {
+        "x": 840,
+        "y": 200,
+        "wires": [
+            {
+                "id": "0a016af05caed270",
+                "port": 1
+            }
+        ]
+    },
+    "flow": [
+        {
+            "id": "0127d1adde230ee0",
+            "type": "inject",
+            "z": "4f4ef842139cbdf9",
+            "name": "every hour",
+            "props": [
+                {
+                    "p": "payload"
+                },
+                {
+                    "p": "topic",
+                    "vt": "str"
+                }
+            ],
+            "repeat": "",
+            "crontab": "0 0-23 * * *",
+            "once": false,
+            "onceDelay": 0.1,
+            "topic": "time",
+            "payload": "",
+            "payloadType": "date",
+            "x": 490,
+            "y": 80,
+            "wires": [
+                [
+                    "0a016af05caed270"
+                ]
+            ]
+        },
+        {
+            "id": "0a016af05caed270",
+            "type": "function",
+            "z": "4f4ef842139cbdf9",
+            "name": "scheduler",
+            "func": "let temperatureDifference = env.get(\"TEMPERATURE_DIFFERENCE\")\nif (temperatureDifference == null) {\n    temperatureDifference = 0.5\n}\n\n// Retrieve or initialize fermentation state\nlet fermentationState = flow.get(\"fermentationState\") || {\n    profile: null,\n    currentStepIndex: 0,\n    stepStartTime: null,\n    lastKnownGravity: null,\n    lastKnownTemperature: null,\n    waitingForTempStabilization: false,\n    fermentationComplete: false,\n    log: [] // Log to store timestamps and events\n};\n\n// Handle profile setup\nif (msg.profile) {\n    fermentationState.profile = msg.profile;\n    fermentationState.currentStepIndex = 0;\n    fermentationState.stepStartTime = null;\n    fermentationState.lastKnownGravity = null;\n    fermentationState.lastKnownTemperature = null;\n    fermentationState.waitingForTempStabilization = true;\n    fermentationState.fermentationComplete = false;\n    fermentationState.log = []; // Reset log when new profile is set\n\n    // Log the start of the first step\n    fermentationState.log.push({\n        step: fermentationState.currentStepIndex + 1,\n        event: \"First Step Started\",\n        timestamp: new Date().toISOString()\n    });\n}\n\n// Update temperature and gravity readings \nif (msg.topic == \"temperature\" && msg.payload !== undefined) {\n    fermentationState.lastKnownTemperature = msg.payload;\n}\nif (msg.topic == \"gravity\" && msg.payload !== undefined) {\n    fermentationState.lastKnownGravity = msg.payload;\n}\n\n// Get the current step\nlet step = fermentationState.profile ? fermentationState.profile.steps[fermentationState.currentStepIndex] : null;\n\nif (step && !fermentationState.fermentationComplete) {\n    // Handle temperature stabilization for new steps\n    if (fermentationState.waitingForTempStabilization) {\n        if (Math.abs(fermentationState.lastKnownTemperature - step.targetTemperature) <= temperatureDifference) {\n            fermentationState.waitingForTempStabilization = false;\n            fermentationState.stepStartTime = Date.now();\n            \n            // Log the timestamp for when temperature was stabilized\n            fermentationState.log.push({\n                step: fermentationState.currentStepIndex + 1,\n                event: \"Step temperature reached\",\n                timestamp: new Date().toISOString()\n            });\n        }\n    }\n\n    // Check if we should process step time goal\n    if (msg.topic = \"time\" && !fermentationState.waitingForTempStabilization) {\n        if (step.goal.days) {\n            let elapsedHours = (Date.now() - fermentationState.stepStartTime) / (1000 * 60 * 60);\n            if (elapsedHours >= step.goal.days * 24) {\n                step = moveToNextStep(\"Time goal met\");\n            }\n        }\n    }\n\n    // Check gravity goal\n    if (fermentationState.lastKnownGravity != null && step.goal.gravity) {\n        let targetGravity = step.goal.gravity.absolute || (fermentationState.profile.expectedFG + step.goal.gravity.fromFG);\n        if (fermentationState.lastKnownGravity <= targetGravity) {\n            step = moveToNextStep(\"Gravity goal met\");\n        }\n    }\n\n    // Send progress update to the first output\n    msg.payload = {\n        target: step.targetTemperature,\n        currentStep: fermentationState.currentStepIndex + 1,\n        totalSteps: fermentationState.profile.steps.length,\n        stepGoal: step.goal,\n        log: fermentationState.log // Include the log in the payload\n    };\n\n    // Send status update to the second output\n    let statusMessage = `Step ${fermentationState.currentStepIndex + 1} / ${fermentationState.profile.steps.length}. Goal: `;\n    if (step.goal.days) {\n        statusMessage += `${step.goal.days} days `;\n    }\n    if (step.goal.gravity) {\n        let gravityDesc = step.goal.gravity.absolute ? step.goal.gravity.absolute : `FG + ${step.goal.gravity.fromFG}`;\n        statusMessage += `or ${gravityDesc} SG`;\n    }\n\n    let statusObject = { text: statusMessage, fill: \"blue\" };\n\n    // Status Indicator Logic\n    if (fermentationState.waitingForTempStabilization) {\n        // Show blue ring when waiting for temperature\n        statusObject[\"shape\"] = \"ring\";\n    } else {\n        // Show blue dot when not waiting for temperature but fermentation ongoing\n        statusObject[\"shape\"] = \"dot\";\n    }\n\n    node.send([msg, { payload: statusObject }]);\n} else if (fermentationState.fermentationComplete) {\n    // Fermentation complete\n    msg.payload = {\n        target: step ? step.targetTemperature : null,\n        currentStep: fermentationState.currentStepIndex + 1,\n        totalSteps: fermentationState.profile.steps.length,\n        stepGoal: \"Complete\",\n        log: fermentationState.log // Include the log when fermentation is complete\n    };\n    node.send([msg, { payload: { fill: \"green\", shape: \"dot\", text: \"Fermentation Complete\" }}]);\n}\n\n// Function to move to the next step\nfunction moveToNextStep(reason) {\n    fermentationState.currentStepIndex++;\n    if (fermentationState.currentStepIndex >= fermentationState.profile.steps.length) {\n        // Fermentation complete, no more steps\n        fermentationState.fermentationComplete = true;\n        return null;\n    } else {\n        fermentationState.waitingForTempStabilization = true;\n        fermentationState.stepStartTime = null;\n\n        // Log the step transition with reason\n        fermentationState.log.push({\n            step: fermentationState.currentStepIndex + 1,\n            event: \"Step Transition\",\n            reason: reason, // Log the reason for transitioning\n            timestamp: new Date().toISOString()\n        });\n\n        return fermentationState.profile.steps[fermentationState.currentStepIndex];\n    }\n}\n\n// Store updated fermentation state\nflow.set(\"fermentationState\", fermentationState);\n\nreturn null;\n",
+            "outputs": 2,
+            "timeout": 0,
+            "noerr": 0,
+            "initialize": "",
+            "finalize": "",
+            "libs": [],
+            "x": 680,
+            "y": 140,
+            "wires": [
+                [],
+                []
+            ]
+        }
+    ]
+}
