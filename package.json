@@ -1,6 +1,6 @@
 {
   "name": "@pakerfeldt/node-red-contrib-fermentation-controller",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A fermentation controller to automatically progress through your fermentation schedule",
   "main": "index.js",
   "engines": {

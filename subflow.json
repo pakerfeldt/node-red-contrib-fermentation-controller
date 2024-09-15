@@ -48,8 +48,8 @@
     ],
     "meta": {
         "module": "Fermentation Controller",
-        "type": "smart home",
-        "version": "1.0.1",
+        "type": "node-red-contrib-fermentation-controller",
+        "version": "1.0.2",
         "author": "Patrik Åkerfeldt",
         "desc": "A fermentation controller to automatically progress through your fermentation schedule",
         "keywords": "beer, home brewing, fermentation, controller, automation, node-red",
