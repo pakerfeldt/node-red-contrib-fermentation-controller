@@ -1,0 +1,172 @@
+[
+    {
+        "id": "6eb2539990762182",
+        "type": "mqtt in",
+        "z": "593a34bf9da057e7",
+        "name": "",
+        "topic": "ispindel/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "e18bab04799c140f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "ecebbd16943df51f"
+            ]
+        ]
+    },
+    {
+        "id": "ecebbd16943df51f",
+        "type": "join",
+        "z": "593a34bf9da057e7",
+        "name": "wait for all readings",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "7",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "3a9ff79c69d498a5"
+            ]
+        ]
+    },
+    {
+        "id": "358bb57887b71c9c",
+        "type": "function",
+        "z": "593a34bf9da057e7",
+        "name": "create HTTP payload",
+        "func": "const regex = /ispindel\\/([\\w\\[\\]]+)\\/(\\w+)/;\nconst found = Object.keys(msg.payload)[0].match(regex);\n\nlet httpPayload = {}\n\nObject.keys(msg.payload).forEach((element) => {\n    let result = element.match(regex)\n    httpPayload[\"name\"] = result[1]\n    switch (result[2]) {\n        case \"tilt\":\n            httpPayload[\"angle\"] = msg.payload[result[0]]\n            break;\n        default:\n            httpPayload[result[2]] = msg.payload[result[0]]\n            break;\n    }\n    httpPayload[\"interval\"] = 900;\n}\n);\n\nreturn {\n    payload: httpPayload\n};",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 100,
+        "wires": [
+            [
+                "67768637d1701888"
+            ]
+        ]
+    },
+    {
+        "id": "67768637d1701888",
+        "type": "http request",
+        "z": "593a34bf9da057e7",
+        "name": "send to Brewfather",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://log.brewfather.net/ispindel?id=YOUR_ID_HERE",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1170,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0396ea281d1c3a80",
+        "type": "delay",
+        "z": "593a34bf9da057e7",
+        "name": "rate limit to 1 per 15 minutes",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "15",
+        "rateUnits": "minute",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 720,
+        "y": 100,
+        "wires": [
+            [
+                "358bb57887b71c9c"
+            ]
+        ]
+    },
+    {
+        "id": "3a9ff79c69d498a5",
+        "type": "change",
+        "z": "593a34bf9da057e7",
+        "name": "reset queue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "true",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 510,
+        "y": 100,
+        "wires": [
+            [
+                "0396ea281d1c3a80"
+            ]
+        ]
+    },
+    {
+        "id": "e18bab04799c140f",
+        "type": "mqtt-broker",
+        "name": "MQTT",
+        "broker": "mqtt",
+        "port": "1883",
+        "clientid": "node-red-tablet",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
