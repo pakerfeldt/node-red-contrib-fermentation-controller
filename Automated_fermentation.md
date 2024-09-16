@@ -102,7 +102,8 @@ Hopefully this profile is relatively straight-forward. The expected final gravit
 ## Example 1. Simple flow with Shelly
 
 [Download example flow](example-flows/shelly.json)
-<img src="images/flow/shelly-simple.png" />
+
+<img src="images/flows/shelly-simple.png" />
 
 ### Requirements
 * [Temperature Controller](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-temperature-controller)
