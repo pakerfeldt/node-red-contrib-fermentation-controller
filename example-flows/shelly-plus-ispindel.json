@@ -65,7 +65,7 @@
         "props": [
             {
                 "p": "profile",
-                "v": "{\"expectedFG\":1.007,\"steps\":[{\"targetTemperature\":12,\"goal\":{\"days\":14}},{\"targetTemperature\":16,\"goal\":{\"days\":1}},{\"targetTemperature\":17,\"goal\":{\"days\":1}},{\"targetTemperature\":0,\"goal\":{\"days\":3}}]}",
+                "v": "{\"expectedFG\":1.007,\"steps\":[{\"targetTemperature\":12,\"goal\":{\"days\":14,\"gravity\":{\"fromFG\":0.01}}},{\"targetTemperature\":16,\"goal\":{\"days\":1}},{\"targetTemperature\":17,\"goal\":{\"days\":1}},{\"targetTemperature\":0,\"goal\":{\"days\":3}}]}",
                 "vt": "json"
             }
         ],
