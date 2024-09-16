@@ -1,5 +1,7 @@
 # Automated fermentation
 
+💬 If you have any questions or suggestions, don't hesitate to [start a conversation using Discussions](https://github.com/pakerfeldt/node-red-contrib-fermentation-controller/discussions).
+
 ⚠️ This guide is work-in-progress ⚠️
 
 This guide will walk you through how to accomplish a fully automated multi-step fermentation using this Node-RED library along with a few other. 
@@ -33,7 +35,7 @@ to transition between steps in your fermentation schedule. If you want to acheiv
 of doing this is to connect it to your MQTT broker. Refer to iSpindel documentation on how to do that.
 
 ## Brewfather
-Worried about not getting readings to Brewfather when changing to MQTT? Don't worry, you can create a very small flow in Node-RED that takes your readings from MQTT and forwards them to Brewfather as if the iSpindel was directly connected.
+Worried about not getting readings to Brewfather when changing to MQTT? Don't worry, you can create a very small flow in Node-RED that takes your readings from MQTT and forwards them to Brewfather as if the iSpindel was directly connected. See [Forwarding to Brewfather](#forwarding-to-brewfather)
 
 # Node-RED
 
