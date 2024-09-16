@@ -99,7 +99,7 @@ Add an inject node and set `msg.profile` to the JSON:
 ```
 Hopefully this profile is relatively straight-forward. The expected final gravity is 1.007. There are 4 steps in this profile which starts at 12°C (this can ofc be Fahrenheit as long as your thermostat expects °F) for either 14 days or until the specific gravity reaches below or equal to 1.017 (whatever comes first). Then it increases the temperature to 16°C for one day, followed by another °C increase for 1 day or until FG is reached. Finally it goes down to 0°C for cold crash for 3 days.
 
-## Example 1. Simple flow with Shelly
+## Example 1. Shelly - Simple flow
 
 [Download example flow](example-flows/shelly-simple.json)
 
@@ -112,7 +112,7 @@ Hopefully this profile is relatively straight-forward. The expected final gravit
 
 This is a very simple flow using Shelly for temperature sensor and controlling a heater & cooler. The fermentation schedule will not be able to use gravity to progress fermentation schedule since we don't have gravity readings provided. However, this is a fully functional setup that will get you a long way.
 
-## Example 2. Shelly flow with 2 temperature sensors
+## Example 2. Shelly - Two sensors
 
 [Download example flow](example-flows/shelly-two-sensors.json)
 
@@ -124,6 +124,26 @@ This is a very simple flow using Shelly for temperature sensor and controlling a
 * [Fermentation Controller](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-fermentation-controller)
 * [Shelly](https://flows.nodered.org/node/node-red-contrib-shelly)
 
-This flow is similar to Example 1 but instead uses two temperature readings. One from your fermentation vessel and one from the ambient air temperature inside the cabinet. Using the `Adaptive Temperature` node, we can allow for smoother transitions inside the cabinet as you go from one temperature to another. If you can measure temperature inside your fermenter, this setup is highly recommended.
+This flow is similar to Example 1 but instead uses two temperature readings. One from your fermentation vessel and one from the ambient air temperature inside the cabinet. Using the `Adaptive Temperature` node, we can allow for smoother transitions inside the cabinet as you go from one temperature to another. If you can measure temperature inside your fermenter, this setup is recommended over Example 1.
 
+## Example 3. Shelly + iSpindel
 
+[Download example flow](example-flows/shelly-plus-ispindel.json)
+
+<img src="images/flows/shelly-plus-ispindel.png" />
+
+### Requirements
+* [Temperature Controller](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-temperature-controller)
+* [Adaptive Temperature](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-adaptive-temperature)
+* [Fermentation Controller](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-fermentation-controller)
+* [Shelly](https://flows.nodered.org/node/node-red-contrib-shelly)
+
+With iSpindel you will allow for gravity readings to progress you through your fermentation schedule and as a bonus, you also have temperature readings from within your fermenter.
+In this example it is assumed that you are using the MQTT integration in iSpindel to serve readings. While there are a few other options as well, those are not covered by this guide.
+
+#### Forwarding to Brewfather
+If you want iSpindel readings to both Node-RED and Brewfather, that is easily solved with an additional [flow like this](example-flows/ispindel-to-brewfather.json):
+
+<img src="images/flows/ispindel-to-brewfather.png" />
+
+Don't forget to open the http node (`send to Brewfather`) and update the URL with your Brewfather API key.
