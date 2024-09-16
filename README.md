@@ -1,5 +1,7 @@
 # Fermentation Controller
 
+ℹ️ Please [read the guide on how to get started](https://github.com/pakerfeldt/node-red-contrib-fermentation-controller/discussions/2) - feel free to comment, ask questions or suggest improvements as well!
+
 ## Overview
 This node manages the fermentation process by controlling temperature, tracking time, and monitoring gravity to progress through various fermentation steps. The node ensures accurate execution of multi-step fermentation profiles based on specific time and gravity goals.
 
