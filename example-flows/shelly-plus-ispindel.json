@@ -1,8 +1,8 @@
 [
     {
-        "id": "fd2d89ccba614ba5",
+        "id": "0c37a853db53e2ef",
         "type": "shelly-gen2",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "hostname": "192.168.1.169",
         "description": "Shelly Plus 2PM",
         "mode": "polling",
@@ -16,52 +16,51 @@
         "devicetype": "SNSW-102P16EU",
         "devicetypemustmatchexactly": true,
         "outputs": 1,
-        "x": 140,
-        "y": 120,
+        "x": 240,
+        "y": 60,
         "wires": [
             [
-                "eb89c7f4b9ede506",
-                "8afcb6e2ff9500f2"
+                "7bd87ff0eb4d6786"
             ]
         ]
     },
     {
-        "id": "a1fe3008853ea88d",
+        "id": "26d167c4a8fa274b",
         "type": "node-red-contrib-temperature-controller",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "name": "",
         "TARGET_TEMPERATURE": 18,
         "TEMPERATURE_DIFFERENCE": 2,
         "COMPRESSOR_DELAY_MINUTES": 3,
-        "x": 860,
-        "y": 120,
+        "x": 940,
+        "y": 100,
         "wires": [
             [
-                "8eb1587583a54e3f"
+                "b0e4aa523cde6507"
             ],
             [
-                "353cbd20a28ccb6d"
+                "48c494ae58b5f365"
             ]
         ]
     },
     {
-        "id": "966b4b6c4993d181",
+        "id": "3d5ffccc3c22c197",
         "type": "node-red-contrib-fermentation-controller",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "name": "",
         "TEMPERATURE_DIFFERENCE": 0.5,
-        "x": 580,
+        "x": 660,
         "y": 180,
         "wires": [
             [
-                "49b4ea3503f796ed"
+                "cb2faab7b155c6b2"
             ]
         ]
     },
     {
-        "id": "83621b6502c7e85a",
+        "id": "b89524a8d0965083",
         "type": "inject",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "name": "Set profile",
         "props": [
             {
@@ -75,18 +74,18 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 340,
-        "y": 180,
+        "x": 420,
+        "y": 220,
         "wires": [
             [
-                "966b4b6c4993d181"
+                "3d5ffccc3c22c197"
             ]
         ]
     },
     {
-        "id": "8eb1587583a54e3f",
+        "id": "b0e4aa523cde6507",
         "type": "change",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "name": "to cooler",
         "rules": [
             {
@@ -102,18 +101,18 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1060,
-        "y": 100,
+        "x": 1140,
+        "y": 80,
         "wires": [
             [
-                "040378810cc183b1"
+                "40b9ee6e3be34fe7"
             ]
         ]
     },
     {
-        "id": "353cbd20a28ccb6d",
+        "id": "48c494ae58b5f365",
         "type": "change",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "name": "to heater",
         "rules": [
             {
@@ -129,18 +128,18 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1060,
-        "y": 140,
+        "x": 1140,
+        "y": 120,
         "wires": [
             [
-                "040378810cc183b1"
+                "40b9ee6e3be34fe7"
             ]
         ]
     },
     {
-        "id": "040378810cc183b1",
+        "id": "40b9ee6e3be34fe7",
         "type": "shelly-gen2",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "hostname": "192.168.1.169",
         "description": "Shelly Plus 2PM",
         "mode": "none",
@@ -154,16 +153,16 @@
         "devicetype": "SNSW-102P16EU",
         "devicetypemustmatchexactly": true,
         "outputs": 1,
-        "x": 1220,
-        "y": 120,
+        "x": 1300,
+        "y": 100,
         "wires": [
             []
         ]
     },
     {
-        "id": "eb89c7f4b9ede506",
+        "id": "7bd87ff0eb4d6786",
         "type": "change",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "name": "as t2",
         "rules": [
             {
@@ -186,18 +185,18 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 350,
-        "y": 100,
+        "x": 430,
+        "y": 60,
         "wires": [
             [
-                "49b4ea3503f796ed"
+                "cb2faab7b155c6b2"
             ]
         ]
     },
     {
-        "id": "8afcb6e2ff9500f2",
+        "id": "a82c4894f673655b",
         "type": "change",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "name": "as t1",
         "rules": [
             {
@@ -206,13 +205,6 @@
                 "pt": "msg",
                 "to": "t1",
                 "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload.temperature100.tC",
-                "tot": "msg"
             }
         ],
         "action": "",
@@ -220,29 +212,98 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 350,
-        "y": 140,
+        "x": 430,
+        "y": 120,
         "wires": [
             [
-                "966b4b6c4993d181",
-                "49b4ea3503f796ed"
+                "3d5ffccc3c22c197",
+                "cb2faab7b155c6b2"
             ]
         ]
     },
     {
-        "id": "49b4ea3503f796ed",
+        "id": "42e6b6e57e3d1235",
+        "type": "mqtt in",
+        "z": "b01b2ef58c73ebd9",
+        "name": "",
+        "topic": "ispindel/iSpindel000[SG]/gravity",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "e18bab04799c140f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 180,
+        "wires": [
+            [
+                "3d5ffccc3c22c197"
+            ]
+        ]
+    },
+    {
+        "id": "bbc3ede7a8523802",
+        "type": "mqtt in",
+        "z": "b01b2ef58c73ebd9",
+        "name": "",
+        "topic": "ispindel/iSpindel000[SG]/temperature",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "e18bab04799c140f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 120,
+        "wires": [
+            [
+                "a82c4894f673655b"
+            ]
+        ]
+    },
+    {
+        "id": "cb2faab7b155c6b2",
         "type": "node-red-contrib-adaptive-temperature",
-        "z": "94b52058d28b21f8",
+        "z": "b01b2ef58c73ebd9",
         "name": "",
         "BASELINE": 0.65,
         "DELTA": 3.5,
         "BETA": 0.5,
-        "x": 620,
-        "y": 120,
+        "x": 660,
+        "y": 100,
         "wires": [
             [
-                "a1fe3008853ea88d"
+                "26d167c4a8fa274b"
             ]
         ]
+    },
+    {
+        "id": "e18bab04799c140f",
+        "type": "mqtt-broker",
+        "name": "MQTT",
+        "broker": "mqtt",
+        "port": "1883",
+        "clientid": "node-red-tablet",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
     }
 ]
