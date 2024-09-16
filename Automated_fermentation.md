@@ -99,4 +99,17 @@ Add an inject node and set `msg.profile` to the JSON:
 ```
 Hopefully this profile is relatively straight-forward. The expected final gravity is 1.007. There are 4 steps in this profile which starts at 12°C (this can ofc be Fahrenheit as long as your thermostat expects °F) for either 14 days or until the specific gravity reaches below or equal to 1.017 (whatever comes first). Then it increases the temperature to 16°C for one day, followed by another °C increase for 1 day or until FG is reached. Finally it goes down to 0°C for cold crash for 3 days.
 
+## Example 1. Simple flow with Shelly
+
+[Download example flow](example-flows/shelly.json)
+<img src="images/flow/shelly-simple.png" />
+
+### Requirements
+* [Temperature Controller](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-temperature-controller)
+* [Fermentation Controller](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-fermentation-controller)
+* [Shelly](https://flows.nodered.org/node/node-red-contrib-shelly)
+
+This is a very simple flow using Shelly for temperature sensor and controlling a heater & cooler. The fermentation schedule will not be able to use gravity to progress fermentation schedule since we don't have gravity readings provided. However, this is a fully functional setup that will get you a long way.
+
+
 

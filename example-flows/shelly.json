@@ -1,0 +1,197 @@
+[
+    {
+        "id": "88b8047f367e10ec",
+        "type": "shelly-gen2",
+        "z": "6fcb0a474406b4ee",
+        "hostname": "192.168.1.169",
+        "description": "Shelly Plus 2PM",
+        "mode": "polling",
+        "verbose": false,
+        "server": "",
+        "outputmode": "event",
+        "uploadretryinterval": 5000,
+        "pollinginterval": "300000",
+        "pollstatus": true,
+        "getstatusoncommand": true,
+        "devicetype": "SNSW-102P16EU",
+        "devicetypemustmatchexactly": true,
+        "outputs": 1,
+        "x": 240,
+        "y": 140,
+        "wires": [
+            [
+                "25c3749b42482cfa",
+                "95aa3fb8664b385a"
+            ]
+        ]
+    },
+    {
+        "id": "25c3749b42482cfa",
+        "type": "change",
+        "z": "6fcb0a474406b4ee",
+        "name": "read temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.temperature100.tC",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "temperature",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 140,
+        "wires": [
+            [
+                "5eb9e9a7d0b00ad4"
+            ]
+        ]
+    },
+    {
+        "id": "5eb9e9a7d0b00ad4",
+        "type": "node-red-contrib-temperature-controller",
+        "z": "6fcb0a474406b4ee",
+        "name": "",
+        "TARGET_TEMPERATURE": 18,
+        "TEMPERATURE_DIFFERENCE": 2,
+        "COMPRESSOR_DELAY_MINUTES": 3,
+        "x": 740,
+        "y": 140,
+        "wires": [
+            [
+                "0037b6a4d4c98f69"
+            ],
+            [
+                "5c25bcfc753b3011"
+            ]
+        ]
+    },
+    {
+        "id": "95aa3fb8664b385a",
+        "type": "node-red-contrib-fermentation-controller",
+        "z": "6fcb0a474406b4ee",
+        "name": "",
+        "TEMPERATURE_DIFFERENCE": 0.5,
+        "x": 480,
+        "y": 200,
+        "wires": [
+            [
+                "5eb9e9a7d0b00ad4"
+            ]
+        ]
+    },
+    {
+        "id": "3a6fb88de2290dd8",
+        "type": "inject",
+        "z": "6fcb0a474406b4ee",
+        "name": "Set profile",
+        "props": [
+            {
+                "p": "profile",
+                "v": "{\"expectedFG\":1.007,\"steps\":[{\"targetTemperature\":12,\"goal\":{\"days\":14}},{\"targetTemperature\":16,\"goal\":{\"days\":1}},{\"targetTemperature\":17,\"goal\":{\"days\":1}},{\"targetTemperature\":0,\"goal\":{\"days\":3}}]}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 260,
+        "y": 200,
+        "wires": [
+            [
+                "95aa3fb8664b385a"
+            ]
+        ]
+    },
+    {
+        "id": "0037b6a4d4c98f69",
+        "type": "change",
+        "z": "6fcb0a474406b4ee",
+        "name": "to cooler",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\t    \"method\" : \"Switch.Set\",\t    \"parameters\" : {\t        \"id\" : 0,\t        \"on\" : msg.payload\t    }\t}",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 120,
+        "wires": [
+            [
+                "fa7a2fd96e8ea350"
+            ]
+        ]
+    },
+    {
+        "id": "5c25bcfc753b3011",
+        "type": "change",
+        "z": "6fcb0a474406b4ee",
+        "name": "to heater",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\t    \"method\" : \"Switch.Set\",\t    \"parameters\" : {\t        \"id\" : 1,\t        \"on\" : msg.payload\t    }\t}",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 160,
+        "wires": [
+            [
+                "fa7a2fd96e8ea350"
+            ]
+        ]
+    },
+    {
+        "id": "fa7a2fd96e8ea350",
+        "type": "shelly-gen2",
+        "z": "6fcb0a474406b4ee",
+        "hostname": "192.168.1.169",
+        "description": "Shelly Plus 2PM",
+        "mode": "none",
+        "verbose": false,
+        "server": "",
+        "outputmode": "event",
+        "uploadretryinterval": 5000,
+        "pollinginterval": 5000,
+        "pollstatus": false,
+        "getstatusoncommand": false,
+        "devicetype": "SNSW-102P16EU",
+        "devicetypemustmatchexactly": true,
+        "outputs": 1,
+        "x": 1120,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    }
+]
