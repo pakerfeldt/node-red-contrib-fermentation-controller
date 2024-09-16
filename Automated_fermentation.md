@@ -101,7 +101,7 @@ Hopefully this profile is relatively straight-forward. The expected final gravit
 
 ## Example 1. Simple flow with Shelly
 
-[Download example flow](example-flows/shelly.json)
+[Download example flow](example-flows/shelly-simple.json)
 
 <img src="images/flows/shelly-simple.png" />
 
@@ -112,5 +112,18 @@ Hopefully this profile is relatively straight-forward. The expected final gravit
 
 This is a very simple flow using Shelly for temperature sensor and controlling a heater & cooler. The fermentation schedule will not be able to use gravity to progress fermentation schedule since we don't have gravity readings provided. However, this is a fully functional setup that will get you a long way.
 
+## Example 2. Shelly flow with 2 temperature sensors
+
+[Download example flow](example-flows/shelly-two-sensors.json)
+
+<img src="images/flows/shelly-two-sensors.png" />
+
+### Requirements
+* [Temperature Controller](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-temperature-controller)
+* [Adaptive Temperature](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-adaptive-temperature)
+* [Fermentation Controller](https://flows.nodered.org/node/@pakerfeldt/node-red-contrib-fermentation-controller)
+* [Shelly](https://flows.nodered.org/node/node-red-contrib-shelly)
+
+This flow is similar to Example 1 but instead uses two temperature readings. One from your fermentation vessel and one from the ambient air temperature inside the cabinet. Using the `Adaptive Temperature` node, we can allow for smoother transitions inside the cabinet as you go from one temperature to another. If you can measure temperature inside your fermenter, this setup is highly recommended.
 
 
